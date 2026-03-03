@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>今日菜單下單</title>
+  <title>公主菜單</title>
   <style>
     :root{
       --bg:#ffffff;
@@ -345,7 +345,7 @@
     <div class="topbar-inner">
       <div class="brand">
         <b>今天吃什麼</b>
-        <span>給女友下單用（你負責煮，她負責挑）</span>
+        <span></span>
       </div>
       <div class="nav">
         <button class="chip active" id="tabMenu">選菜</button>
@@ -363,7 +363,7 @@
         <div class="panel-header">
           <div>
             <h2>選項頁</h2>
-            <p>可備註、可加購物車、分類切換</p>
+            <p>可備註</p>
           </div>
           <div class="search">
             <input id="search" placeholder="搜尋：例如 牛 / 甜品 / 可樂 / 滷肉" />
@@ -373,9 +373,10 @@
           <button class="chip active" data-cat="all">全部</button>
           <button class="chip" data-cat="主餐">主餐</button>
           <button class="chip" data-cat="牛">牛</button>
-          <button class="chip" data-cat="飲料">飲料</button>
-          <button class="chip" data-cat="零食">零食</button>
-          <button class="chip" data-cat="甜品">甜品</button>
+          <button class="chip" data-cat="魚">魚</button>
+          <button class="chip" data-cat="配菜">配菜</button>
+          <button class="chip" data-cat="湯">湯</button>
+          <button class="chip" data-cat="健康餐">健康餐</button>
         </div>
         <div class="grid" id="grid"></div>
       </div>
@@ -385,7 +386,7 @@
         <div class="panel-header">
           <div>
             <h2>下一頁：下單</h2>
-            <p>這頁會生成訂單摘要，可複製傳 LINE 給你</p>
+            <p></p>
           </div>
           <div style="display:flex; gap:8px;">
             <button class="btn secondary" id="backToMenu">回選菜</button>
@@ -394,11 +395,11 @@
 
         <div class="checkout">
           <div class="field">
-            <label>下單人（你女友的名字 / 暱稱）</label>
+            <label>下單人</label>
             <input id="buyerName" placeholder="例如：寶 / 琪琪 / 老闆娘" />
           </div>
           <div class="field">
-            <label>想幾點吃 / 其他整單備註</label>
+            <label>想幾點吃 / 其他備註</label>
             <textarea id="orderNote" placeholder="例如：想19:30吃、不要太辣、飯少一點"></textarea>
           </div>
 
@@ -408,13 +409,13 @@
           </div>
 
           <div style="display:flex; gap:8px; flex-wrap:wrap;">
-            <button class="btn" id="placeOrder">送出訂單（存到本機收單區）</button>
+            <button class="btn" id="placeOrder">送出訂單</button>
             <button class="btn secondary" id="copyOrder">複製摘要（貼到LINE）</button>
             <button class="btn secondary" id="clearCart">清空購物車</button>
           </div>
 
           <p class="muted" style="margin:0;font-size:12px;">
-            * 目前是「最窮但最穩」版本：沒有後端也能跑。要真正你才能看見收單，需要接資料庫/表單。
+            * 
           </p>
         </div>
       </div>
@@ -424,7 +425,7 @@
         <div class="panel-header">
           <div>
             <h2>收單區（Demo）</h2>
-            <p>同一台裝置會保存你收到的訂單</p>
+            <p>保存你收到的訂單</p>
           </div>
           <div style="display:flex; gap:8px;">
             <button class="btn secondary" id="exportOrders">匯出JSON</button>
@@ -438,13 +439,10 @@
 
         <div style="padding:0 14px 14px;">
           <div class="field">
-            <label>假管理 PIN（不安全，只是讓畫面像真的）</label>
-            <input id="adminPin" placeholder="預設 9527" />
+            <label>管理 PIN（</label>
+            <input id="adminPin" placeholder="密碼" />
           </div>
           <button class="btn secondary" id="unlockAdmin">解鎖/鎖定（Demo）</button>
-          <p class="muted" style="margin:8px 0 0;font-size:12px;">
-            老實說：沒有後端的「只有你能看」都只是心理安慰。要真的私密，得用登入 + 資料庫。
-          </p>
         </div>
       </div>
     </div>
@@ -470,25 +468,36 @@
 <script>
   // ====== Data ======
   const ITEMS = [
-    // 主餐
-    {id:"m1", cat:"主餐", name:"滷肉飯", desc:"窮人的浪漫：肥瘦自己抓。", img:""},
-    {id:"m2", cat:"主餐", name:"蒜香雞腿排", desc:"煎到金黃，配菜隨機。", img:""},
-    {id:"m3", cat:"主餐", name:"番茄炒蛋", desc:"便宜、快、穩。", img:""},
-    {id:"m4", cat:"主餐", name:"咖哩飯", desc:"一鍋到底，懶人救星。", img:""},
-    // 牛
-    {id:"b1", cat:"牛", name:"黑胡椒牛肉", desc:"別把牛煎成橡皮擦。", img:""},
-    {id:"b2", cat:"牛", name:"牛丼（洋蔥牛肉）", desc:"甜甜鹹鹹，白飯殺手。", img:""},
-    // 飲料
-    {id:"d1", cat:"飲料", name:"無糖豆漿", desc:"裝健康的樣子（也是真的）。", img:""},
-    {id:"d2", cat:"飲料", name:"可樂", desc:"快樂水，量力而為。", img:""},
-    {id:"d3", cat:"飲料", name:"奶茶", desc:"甜度你自己背鍋。", img:""},
-    // 零食
-    {id:"s1", cat:"零食", name:"洋芋片", desc:"配劇必備。", img:""},
-    {id:"s2", cat:"零食", name:"堅果", desc:"比較不罪惡的罪惡。", img:""},
-    // 甜品
-    {id:"ds1", cat:"甜品", name:"布丁", desc:"餐後小確幸。", img:""},
-    {id:"ds2", cat:"甜品", name:"水果優格", desc:"假裝很自律。", img:""},
-  ];
+  // 主餐（飯/麵/丼/咖哩等）
+  {id:"m1", cat:"主餐", name:"蕃茄炒蛋", desc:"", img:""},
+  {id:"m2", cat:"主餐", name:"親子丼", desc:"", img:""},
+  {id:"m3", cat:"主餐", name:"咖喱飯", desc:"", img:""},
+  {id:"m4", cat:"主餐", name:"醬油蛋拌飯", desc:"", img:""},
+  {id:"m5", cat:"主餐", name:"蒜味法國麵包", desc:"", img:""},
+  {id:"m6", cat:"主餐", name:"牛肉麵", desc:"", img:""},
+  {id:"m7", cat:"主餐", name:"牛排義大利麵", desc:"", img:""},
+  {id:"m8", cat:"主餐", name:"青醬義大利麵", desc:"", img:""},
+
+  // 牛
+  {id:"b1", cat:"牛", name:"牛肉金針菇捲", desc:"", img:""},
+  {id:"b2", cat:"牛", name:"牛肉節瓜捲", desc:"", img:""},
+  {id:"b3", cat:"牛", name:"牛肉滑蛋飯", desc:"", img:""},
+
+  // 魚
+  {id:"f1", cat:"魚", name:"鮭魚", desc:"", img:""},
+  {id:"f2", cat:"魚", name:"清蒸鱸魚", desc:"", img:""},
+
+  // 配菜
+  {id:"s1", cat:"配菜", name:"馬鈴薯", desc:"", img:""},
+  {id:"s2", cat:"配菜", name:"高麗菜", desc:"", img:""},
+  {id:"s3", cat:"配菜", name:"醬油蒸蛋", desc:"", img:""},
+
+  // 湯
+  {id:"t1", cat:"湯", name:"蔬菜湯", desc:"", img:""},
+
+  // 健康餐
+  {id:"h1", cat:"健康餐", name:"琦琦水煮餐", desc:"", img:""},
+];
 
   // Cart structure: { [id]: {qty:number, note:string} }
   const state = {
@@ -527,7 +536,7 @@
           <div class="img">
             <span class="badge">${esc(it.cat)}</span>
             <img alt="${esc(it.name)}" />
-            <div>${it.img ? "" : "（你之後可放圖片）"}</div>
+            <div>${it.img ? "" : ""}</div>
           </div>
           <div class="card-body">
             <div class="title-row">
@@ -571,7 +580,7 @@
     const body = $("#cartBody");
     const entries = Object.entries(state.cart).filter(([id,v])=> (v.qty||0) > 0 || (v.note||"").trim().length>0);
     if(entries.length===0){
-      body.innerHTML = `<div class="empty">還沒選任何東西。<br/>（我知道，你女友可能在試探你會不會煮。）</div>`;
+      body.innerHTML = `<div class="empty">還沒選任何東西。<br/>（我知道，公主可能在試探我會不會煮。）</div>`;
     }else{
       body.innerHTML = entries.map(([id,v])=>{
         const it = ITEMS.find(x=>x.id===id);
@@ -719,7 +728,7 @@
     const text = buildSummary();
     try{
       await navigator.clipboard.writeText(text);
-      alert("已複製！貼到 LINE 給你就行。");
+      alert("已複製！貼到 LINE。");
     }catch(e){
       prompt("複製失敗，手動複製：", text);
     }
@@ -731,12 +740,12 @@
     const summary = buildSummary();
     const hasItems = Object.values(state.cart).some(v => (v.qty||0) > 0);
     if(!hasItems){
-      alert("購物車空的也敢下單？你女友很勇喔😌");
+      alert("購物車空的還下單？");
       return;
     }
     state.orders.push(summary);
     persistOrders();
-    alert("已送出（存到本機收單區）！\n\n* 注意：這是Demo，換裝置你就看不到。");
+    alert("已送出（存到本機收單區）！\n\n* 注意：這是Demo");
     setPage("admin");
     // optional clear cart
     // clearCart();
@@ -771,7 +780,7 @@
       alert(state.adminUnlocked ? "已解鎖（Demo）" : "已鎖定");
       renderAdmin();
     }else{
-      alert("PIN錯了。你女友在旁邊偷看是不是？");
+      alert("錯PIN");
     }
   };
 
