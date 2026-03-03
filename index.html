@@ -535,8 +535,7 @@
         <div class="card">
           <div class="img">
             <span class="badge">${esc(it.cat)}</span>
-            <img alt="${esc(it.name)}" />
-            <div>${it.img ? "" : ""}</div>
+            <img alt="${esc(it.name)}" src="${esc(it.img || "")}" style="${it.img ? "display:block" : "display:none"}" />
           </div>
           <div class="card-body">
             <div class="title-row">
@@ -612,7 +611,7 @@
     const ncount = Object.values(state.cart).reduce((a,v)=>a + ((v.note||"").trim()?1:0), 0);
     $("#cartCount").textContent = count;
     $("#noteCount").textContent = ncount;
-    $("#cartHint").textContent = count ? "選好就去「下單」";
+    $("#cartHint").textContent = count ? "選好就去「下單」": "先從一道開始也可以";
   }
 
   function buildSummary(){
