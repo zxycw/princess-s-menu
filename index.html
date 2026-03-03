@@ -396,11 +396,11 @@
         <div class="checkout">
           <div class="field">
             <label>下單人</label>
-            <input id="buyerName" placeholder="例如：寶 / 琪琪 / 老闆娘" />
+            <input id="buyerName">
           </div>
           <div class="field">
             <label>想幾點吃 / 其他備註</label>
-            <textarea id="orderNote" placeholder="例如：想19:30吃、不要太辣、飯少一點"></textarea>
+            <textarea id="orderNote" placeholder="例如：想19:30吃、不要太辣、飯多一點"></textarea>
           </div>
 
           <div class="field">
@@ -545,7 +545,7 @@
             </div>
             <div class="desc">${esc(it.desc)}</div>
 
-            <textarea class="note" placeholder="備註：少飯/不要辣/要多蔥…" data-note="${it.id}">${esc(note)}</textarea>
+            <textarea class="note" placeholder="備註：飯多/不要辣…" data-note="${it.id}">${esc(note)}</textarea>
 
             <div class="actions">
               <div class="qty">
@@ -612,7 +612,7 @@
     const ncount = Object.values(state.cart).reduce((a,v)=>a + ((v.note||"").trim()?1:0), 0);
     $("#cartCount").textContent = count;
     $("#noteCount").textContent = ncount;
-    $("#cartHint").textContent = count ? "選好就去「下單」" : "先從一道開始也行";
+    $("#cartHint").textContent = count ? "選好就去「下單」";
   }
 
   function buildSummary(){
